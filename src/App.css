@@ -36,3 +36,9 @@
     transform: rotate(360deg);
   }
 }
+
+button:disabled,
+button[disabled]{
+  background-color: #595959;
+  color: #3a3a3a;
+}
