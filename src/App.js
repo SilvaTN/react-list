@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import './App.css'
 import TodoList from './TodoList'
 import {v4 as uuidv4} from 'uuid'
-import { Button, Typography, Paper, Grid, Input} from "@material-ui/core";
+import { Button, Typography, Paper, Grid} from "@material-ui/core";
 import Header from "./Header";
 import AddIcon from '@material-ui/icons/Add';
 import ClearButtons from "./ClearButtons"
@@ -16,7 +16,6 @@ function App() {
   const [todos, setTodos] = useState([]);
   const [canDelete, setCanDelete] = useState(false);
   const todoNameRef = useRef(); //will give us access to input element
-  let propBoolWePass = true; //
 
   useEffect(() => {
     const storedTodos = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
