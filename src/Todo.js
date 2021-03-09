@@ -1,5 +1,5 @@
 import React from 'react'
-import { Checkbox, InputLabel, Grid } from "@material-ui/core";
+import { Checkbox } from "@material-ui/core";
 
 export default function Todo({ todo, toggleTodo }) {
     function handleTodoClick() {
@@ -14,7 +14,7 @@ export default function Todo({ todo, toggleTodo }) {
             fontSize: "20px"}}>
             <label>
                 <Checkbox checked={todo.complete} onChange={handleTodoClick} />
-                {todo.name}
+                <span>{todo.name}</span>
             </label>
         </div>
     )

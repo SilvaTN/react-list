@@ -1,3 +1,8 @@
+// Allow double tap to change item name, if you wanna edit the quantities for example. You click out of the item to save. If you leave the item blank, it is deleted when you click out of it.
+// maintain a history. Each time you paste more than 3 items at a time into the todo list, and each time you delete/remove something, we save the list right before completing that particular action. Keep track of the last 10 of these actions.
+
+
+
 import React, { useState, useRef, useEffect } from 'react'
 import './App.css'
 import TodoList from './TodoList'
@@ -7,19 +12,23 @@ import Header from "./Header";
 import AddIcon from '@material-ui/icons/Add';
 import ClearButtons from "./ClearButtons"
 
-
+//aaaaaaaaa
+//this was before i made a proper history
 
 const LOCAL_STORAGE_KEY = 'todoApp.todos';
 
 function App() {
 
   const [todos, setTodos] = useState([]);
-  const [canDelete, setCanDelete] = useState(false);
-  const todoNameRef = useRef(); //will give us access to input element
+  const [todoHistory, setTodoHistory] = useState([]);
+  const nameRef = useRef(); //will give us access to input element
 
   useEffect(() => {
     const storedTodos = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
-    if (storedTodos) setTodos(storedTodos);
+    if (storedTodos) {
+      setTodos(storedTodos);
+      // setTodoHistory(storedTodos);
+    }
   }, [])
 
   useEffect(() => {
@@ -34,22 +43,29 @@ function App() {
   }
 
   function handleAddTodo(eventProperty) {
+    setTodoHistory([...todoHistory, todos]);
     //.current.value is the name of whatever element we are currently referencing
-    const name = todoNameRef.current.value;
+    const name = nameRef.current.value;
     if (name === '') return;
     setTodos(prevTodos => {
       return [...prevTodos, { id: uuidv4(), name: name, complete: false}]
     })
-    todoNameRef.current.value = null;
+    nameRef.current.value = null;
   }
 
   function handleClearDoneTodos() {
-    console.log("canDelete is: " + canDelete);
+    setTodoHistory([...todoHistory, todos]);
+    console.log("the todo history is: " + todos);
     const newTodos = todos.filter(todo => !todo.complete);
-    setTodos(newTodos);
+    if (todos.length !== newTodos) {
+      setTodos(newTodos);
+    }
   }
 
   function handleClearAllTodos() {
+    console.log("the todos are: " + todos);
+    setTodoHistory([...todoHistory, todos]);
+    console.log("the todo history is: " + todos);
     setTodos([]);
   }
 
@@ -62,11 +78,12 @@ function App() {
     navigator.clipboard.readText().then(
       clipText => {
         addPastedList(clipText);
+        setTodoHistory([...todoHistory, todos]);
       });
   }
 
   function addPastedList(clipText) {
-    todoNameRef.current.value = null;
+    nameRef.current.value = null;
     if (clipText.trim() === "") {
       console.log("There was nothing to paste");
       return;
@@ -103,13 +120,13 @@ function App() {
     <Paper style={{minHeight: "100vh", paddingBottom: "100px"}}>
     <Grid container direction="column">
       <Grid item>
-        <Header  canDelete={canDelete} setCanDelete={setCanDelete} />
+        <Header todoHistory={todoHistory} setTodoHistory={setTodoHistory} setTodos={setTodos} />
       </Grid>
       <Grid item container>
         <Grid item xs={1} sm={2} />
         <Grid item xs={10} sm={8}>
           <div style={{display: "flex", marginTop: "5vh", marginBottom: "5vh"}}>
-            <input style={{width: "65%", fontSize: "22px"}} ref={todoNameRef} type="text" onPaste={handlePaste} />
+            <input style={{width: "65%", fontSize: "22px"}} ref={nameRef} type="text" onPaste={handlePaste} />
             <Button  style={{width: "35%"}} variant="contained" color="secondary"  startIcon={<AddIcon />} onClick={handleAddTodo}>Add Todo</Button>
           </div>
           
@@ -118,7 +135,7 @@ function App() {
           <Button style={{backgroundColor: "#696969"}} variant="outlined" onClick={handleCopyList}>Copy Remaining</Button>
 
 {/* in the options, you can clear all and clear complete items */}
-          <ClearButtons handleClearAllTodos={handleClearAllTodos} handleClearDoneTodos={handleClearDoneTodos} canDelete={canDelete} />
+          <ClearButtons handleClearAllTodos={handleClearAllTodos} handleClearDoneTodos={handleClearDoneTodos} />
               
         </Grid>
         <Grid item xs={1} sm={2} />
