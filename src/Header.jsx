@@ -9,6 +9,7 @@ import UndoIcon from '@material-ui/icons/Undo';
 const Header = ({todoHistory, setTodoHistory, setTodos}) => {
 
     function handleUndo() {
+        //todoHistory is an array of all todos excluding the current.
         if (todoHistory.length >= 1) {
             setTodoHistory(todoHistory.slice(0, todoHistory.length - 1));
             console.log("history is greater than 2");
