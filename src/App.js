@@ -117,38 +117,38 @@ function App() {
   }
 
   return (
-    <Paper style={{minHeight: "100vh", paddingBottom: "100px"}}>
-    <Grid container direction="column">
-      <Grid item>
-        <Header todoHistory={todoHistory} setTodoHistory={setTodoHistory} setTodos={setTodos} />
-      </Grid>
-      <Grid item container>
-        <Grid item xs={1} sm={2} />
-        <Grid item xs={10} sm={8}>
-          <div style={{display: "flex", marginTop: "5vh", marginBottom: "5vh"}}>
-            <input style={{width: "65%", fontSize: "22px"}} ref={nameRef} type="text" onPaste={handlePaste} />
-            <Button  style={{width: "35%"}} variant="contained" color="secondary"  startIcon={<AddIcon />} onClick={handleAddTodo}>Add</Button>
-          </div>
-          
-          <TodoList todos={todos} toggleTodo={toggleTodo}/>
-          <div style={{marginBottom: "1vh", marginTop: "2vh"}}><Typography>{todos.filter(todo => !todo.complete).length} remaining</Typography></div>   
-          <Button style={{backgroundColor: "#696969"}} variant="outlined" onClick={handleCopyList}>Copy Remaining</Button>
-
-{/* in the options, you can clear all and clear complete items */}
-          <ClearButtons handleClearAllTodos={handleClearAllTodos} handleClearDoneTodos={handleClearDoneTodos} />
-              
+    <Paper style={{minHeight: "100vh"}}>
+      <Grid container direction="column">
+        <Grid item>
+          <Header todoHistory={todoHistory} setTodoHistory={setTodoHistory} setTodos={setTodos} />
         </Grid>
-        <Grid item xs={1} sm={2} />
+        <Grid item container style={{marginBottom: "50px"}}>
+          <Grid item xs={1} sm={2} />
+          <Grid item xs={10} sm={8}>
+            <div style={{display: "flex", marginTop: "5vh", marginBottom: "5vh"}}>
+              <input style={{width: "65%", fontSize: "22px"}} ref={nameRef} type="text" onPaste={handlePaste} />
+              <Button  style={{width: "35%"}} variant="contained" color="secondary"  startIcon={<AddIcon />} onClick={handleAddTodo}>Add</Button>
+            </div>
+            
+            <TodoList todos={todos} toggleTodo={toggleTodo}/>
+            <div style={{marginBottom: "1vh", marginTop: "2vh"}}><Typography>{todos.filter(todo => !todo.complete).length} remaining</Typography></div>   
+            <Button style={{backgroundColor: "#696969"}} variant="outlined" onClick={handleCopyList}>Copy Remaining</Button>
 
-      
-      {/* xs={false} is the same as xs={0}, and it means on xtra small screens and up, we take up 0 of the 12 spaces. sm={2} means on small screens and up, we take up 2 of the 12 spaces */}
-        {/* <Grid item xs={false} sm={2} />
-        <Grid item xs={12} sm={8}>
-          <Content />
+  {/* in the options, you can clear all and clear complete items */}
+            <ClearButtons handleClearAllTodos={handleClearAllTodos} handleClearDoneTodos={handleClearDoneTodos} />
+                
+          </Grid>
+          <Grid item xs={1} sm={2} />
+
+        
+        {/* xs={false} is the same as xs={0}, and it means on xtra small screens and up, we take up 0 of the 12 spaces. sm={2} means on small screens and up, we take up 2 of the 12 spaces */}
+          {/* <Grid item xs={false} sm={2} />
+          <Grid item xs={12} sm={8}>
+            <Content />
+          </Grid>
+          <Grid item xs={false} sm={2} />  */}
         </Grid>
-        <Grid item xs={false} sm={2} />  */}
       </Grid>
-    </Grid>
     </Paper>
     );
     
