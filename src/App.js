@@ -127,7 +127,7 @@ function App() {
         <Grid item xs={10} sm={8}>
           <div style={{display: "flex", marginTop: "5vh", marginBottom: "5vh"}}>
             <input style={{width: "65%", fontSize: "22px"}} ref={nameRef} type="text" onPaste={handlePaste} />
-            <Button  style={{width: "35%"}} variant="contained" color="secondary"  startIcon={<AddIcon />} onClick={handleAddTodo}>Add Todo</Button>
+            <Button  style={{width: "35%"}} variant="contained" color="secondary"  startIcon={<AddIcon />} onClick={handleAddTodo}>Add</Button>
           </div>
           
           <TodoList todos={todos} toggleTodo={toggleTodo}/>

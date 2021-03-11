@@ -23,7 +23,7 @@ const Header = ({todoHistory, setTodoHistory, setTodos}) => {
         // If you do this, give a margin of 0 to html body
         <AppBar position="static">
             <Toolbar>
-                <Typography style={{flex: "1"}} variant="h4" >To dos</Typography>
+                <Typography style={{flex: "1"}} variant="h4" >Groceries</Typography>
                 <IconButton onDoubleClick={handleUndo} aria-label="undo">
                     <UndoIcon />
                     <Typography variant="body1">Undo</Typography>
