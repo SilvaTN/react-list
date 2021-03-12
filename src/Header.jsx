@@ -21,7 +21,7 @@ const Header = ({todoHistory, setTodoHistory, setTodos}) => {
     return (
         // static makes app bar  always be at the top, and prevents other content from being hidden underneath it.
         // If you do this, give a margin of 0 to html body
-        <AppBar position="static">
+        <AppBar position="fixed">
             <Toolbar>
                 <Typography style={{flex: "1"}} variant="h4" >Groceries</Typography>
                 <IconButton onDoubleClick={handleUndo} aria-label="undo">

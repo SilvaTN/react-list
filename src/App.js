@@ -1,5 +1,6 @@
 // Allow double tap to change item name, if you wanna edit the quantities for example. You click out of the item to save. If you leave the item blank, it is deleted when you click out of it.
-// maintain a history. Each time you paste more than 3 items at a time into the todo list, and each time you delete/remove something, we save the list right before completing that particular action. Keep track of the last 10 of these actions.
+
+//pra botar background image com opacity and full size, look at your survey form project
 
 
 
@@ -10,10 +11,8 @@ import {v4 as uuidv4} from 'uuid'
 import { Button, Typography, Paper, Grid} from "@material-ui/core";
 import Header from "./Header";
 import AddIcon from '@material-ui/icons/Add';
-import ClearButtons from "./ClearButtons"
+import ClearButtons from "./ClearButtons";
 
-//aaaaaaaaa
-//this was before i made a proper history
 
 const LOCAL_STORAGE_KEY = 'todoApp.todos';
 
@@ -115,10 +114,10 @@ function App() {
       console.log("could not copy");
     });
   }
-
+//style={{backgroundImage: `url(${background})`, opacity: "0.5"}}
   return (
-    <Paper style={{minHeight: "100vh"}}>
-      <Grid container direction="column">
+    <Paper className="bg" style={{backgroundColor: "rgba(66, 66, 66, 0.9)"}}>
+      <Grid container direction="column" >
         <Grid item>
           <Header todoHistory={todoHistory} setTodoHistory={setTodoHistory} setTodos={setTodos} />
         </Grid>
