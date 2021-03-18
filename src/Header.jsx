@@ -1,18 +1,19 @@
 import React from "react";
 import { AppBar, Toolbar, Typography } from "@material-ui/core";
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+// import MoreVertIcon from '@material-ui/icons/MoreVert';
 import IconButton from '@material-ui/core/IconButton';
 import UndoIcon from '@material-ui/icons/Undo';
 
 
 
-const Header = ({todoHistory, setTodoHistory, setTodos}) => {
+const Header = ({todoHistory, setTodoHistory, setTodos, selectOnlyThis}) => {
 
     function handleUndo() {
+        selectOnlyThis();
         //todoHistory is an array of all todos excluding the current.
         if (todoHistory.length >= 1) {
+            console.log("handleUndo: setting todo history");
             setTodoHistory(todoHistory.slice(0, todoHistory.length - 1));
-            console.log("history is greater than 2");
             setTodos(todoHistory[todoHistory.length - 1]);
         }
         

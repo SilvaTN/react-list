@@ -22,6 +22,7 @@ function App() {
   const [todoHistory, setTodoHistory] = useState([]);
   const nameRef = useRef(); //will give us access to input element
 
+  //only runs when mounted
   useEffect(() => {
     const storedTodos = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
     if (storedTodos) {
@@ -30,6 +31,7 @@ function App() {
     }
   }, [])
 
+  //runs when mounted (I think?) and every time todos is updated
   useEffect(() => {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(todos))
   }, [todos])
@@ -42,19 +44,23 @@ function App() {
   }
 
   function handleAddTodo(eventProperty) {
-    setTodoHistory([...todoHistory, todos]);
     //.current.value is the name of whatever element we are currently referencing
-    const name = nameRef.current.value;
-    if (name === '') return;
-    setTodos(prevTodos => {
-      return [...prevTodos, { id: uuidv4(), name: name, complete: false}]
-    })
+    const name = nameRef.current.value.trim();
     nameRef.current.value = null;
+    if (name === '') {
+      return;
+    }
+    console.log("handleAddTodo: setting todo history");
+    setTodoHistory([...todoHistory, todos]);
+    setTodos(prevTodos => {
+      return [...prevTodos, { id: uuidv4(), name: name, complete: false, selected: false }]
+    })
+
   }
 
   function handleClearDoneTodos() {
+    console.log("handleClearDoneTodos: setting todo history");
     setTodoHistory([...todoHistory, todos]);
-    console.log("the todo history is: " + todos);
     const newTodos = todos.filter(todo => !todo.complete);
     if (todos.length !== newTodos) {
       setTodos(newTodos);
@@ -62,9 +68,8 @@ function App() {
   }
 
   function handleClearAllTodos() {
-    console.log("the todos are: " + todos);
+    console.log("handleClearAllTodos: setting todo history");
     setTodoHistory([...todoHistory, todos]);
-    console.log("the todo history is: " + todos);
     setTodos([]);
   }
 
@@ -77,6 +82,7 @@ function App() {
     navigator.clipboard.readText().then(
       clipText => {
         addPastedList(clipText);
+        console.log("handlePaste: setting todo history");
         setTodoHistory([...todoHistory, todos]);
       });
   }
@@ -99,7 +105,7 @@ function App() {
     
     newTodos.forEach( (name) => {
       setTodos(prevTodos => {
-        return [...prevTodos, { id: uuidv4(), name: name, complete: false}]
+        return [...prevTodos, { id: uuidv4(), name: name, complete: false, selected: false }]
       });
     });
   }
@@ -107,19 +113,62 @@ function App() {
   function handleCopyList() {
     const remainingArray = todos.filter(todo => !todo.complete).map(function(todo) {return todo.name});
     const remainingStr = remainingArray.join("\n");
-    console.log(remainingStr);
     navigator.clipboard.writeText(remainingStr).then(function() {
       console.log("successfully copied");
     }, function() {
       console.log("could not copy");
     });
   }
-//style={{backgroundImage: `url(${background})`, opacity: "0.5"}}
+
+  function selectOnlyThis(todoID = "none") {
+    console.log("selectOnlyThis");
+    const newTodos = [...todos]; //makes a copy of todos
+    for (let i = 0; i < newTodos.length; i++) {
+      if (newTodos[i].id === todoID) {
+        newTodos[i].selected = true;
+      } else {
+        newTodos[i].selected = false;
+      }
+    }
+    setTodos(newTodos);
+  }
+
+  function updateTodo(newName, todo) {
+
+    console.log("updatedTodo: b4, the history length was: " + todoHistory.length);
+    if (todoHistory.length > 0) {
+      setTodoHistory([...todoHistory, todos]);
+    } else {
+      setTodoHistory([todos]);
+    }
+    console.log("updatedTodo: now, the history length is: " + todoHistory.length);
+
+    const updatedName = newName.trim();
+    if (updatedName !== todo.name) {
+      let i = 0;
+      while (todos[i].id !== todo.id) {
+        i++;
+      }
+      const isSelected = todos[i].selected;
+      const isComplete = todos.complete;
+      const firstHalf = todos.slice(0, i);
+      const middle = [{ id: uuidv4(), name: updatedName, complete: isComplete, selected: isSelected }];
+      const secondHalf = todos.slice(i+1);
+      console.log("first, middle and second half");
+      console.log(firstHalf);
+      console.log(middle);
+      console.log(secondHalf);
+      const newTodos = [...firstHalf, ...middle, ...secondHalf];
+      setTodos(newTodos);
+    }
+}
+
+
   return (
     <Paper className="bg" style={{backgroundColor: "rgba(66, 66, 66, 0.9)"}}>
       <Grid container direction="column" >
         <Grid item>
-          <Header todoHistory={todoHistory} setTodoHistory={setTodoHistory} setTodos={setTodos} />
+          <Header todoHistory={todoHistory} setTodoHistory={setTodoHistory} setTodos={setTodos} selectOnlyThis={selectOnlyThis} />
         </Grid>
         <Grid item container style={{marginBottom: "50px"}}>
           <Grid item xs={1} sm={2} />
@@ -129,7 +178,7 @@ function App() {
               <Button  style={{width: "35%"}} variant="contained" color="secondary"  startIcon={<AddIcon />} onClick={handleAddTodo}>Add</Button>
             </div>
             
-            <TodoList todos={todos} toggleTodo={toggleTodo}/>
+            <TodoList todos={todos} toggleTodo={toggleTodo} selectOnlyThis={selectOnlyThis}  updateTodo={updateTodo} />
             <div style={{marginBottom: "1vh", marginTop: "2vh"}}><Typography>{todos.filter(todo => !todo.complete).length} remaining</Typography></div>   
             <Button style={{backgroundColor: "#696969"}} variant="outlined" onClick={handleCopyList}>Copy Remaining</Button>
 
