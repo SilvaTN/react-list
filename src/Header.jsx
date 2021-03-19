@@ -12,9 +12,10 @@ const Header = ({todoHistory, setTodoHistory, setTodos, selectOnlyThis}) => {
         selectOnlyThis();
         //todoHistory is an array of all todos excluding the current.
         if (todoHistory.length >= 1) {
-            console.log("handleUndo: setting todo history");
+            // console.log("handleUndo: setting todo history");
             setTodoHistory(todoHistory.slice(0, todoHistory.length - 1));
             setTodos(todoHistory[todoHistory.length - 1]);
+
         }
         
     }
@@ -25,10 +26,18 @@ const Header = ({todoHistory, setTodoHistory, setTodos, selectOnlyThis}) => {
         <AppBar position="fixed">
             <Toolbar>
                 <Typography style={{flex: "1"}} variant="h4" >Groceries</Typography>
-                <IconButton onDoubleClick={handleUndo} aria-label="undo">
-                    <UndoIcon />
-                    <Typography variant="body1">Undo</Typography>
-                </IconButton>
+                {todoHistory.length > 0 ? (
+                    <IconButton onDoubleClick={handleUndo} aria-label="undo">
+                        <UndoIcon />
+                        <Typography variant="body1">Undo</Typography>
+                    </IconButton>
+                ) : (
+                    <IconButton style={{opacity: "0.6"}} onDoubleClick={handleUndo} aria-label="undo">
+                        <UndoIcon />
+                        <Typography variant="body1">Undo</Typography>
+                    </IconButton>
+                )}
+
             </Toolbar>
         </AppBar>
     );

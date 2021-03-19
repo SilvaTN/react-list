@@ -27,7 +27,6 @@ function App() {
     const storedTodos = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
     if (storedTodos) {
       setTodos(storedTodos);
-      // setTodoHistory(storedTodos);
     }
   }, [])
 
@@ -50,7 +49,7 @@ function App() {
     if (name === '') {
       return;
     }
-    console.log("handleAddTodo: setting todo history");
+    // console.log("handleAddTodo: setting todo history");
     setTodoHistory([...todoHistory, todos]);
     setTodos(prevTodos => {
       return [...prevTodos, { id: uuidv4(), name: name, complete: false, selected: false }]
@@ -59,7 +58,7 @@ function App() {
   }
 
   function handleClearDoneTodos() {
-    console.log("handleClearDoneTodos: setting todo history");
+    // console.log("handleClearDoneTodos: setting todo history");
     setTodoHistory([...todoHistory, todos]);
     const newTodos = todos.filter(todo => !todo.complete);
     if (todos.length !== newTodos) {
@@ -68,7 +67,7 @@ function App() {
   }
 
   function handleClearAllTodos() {
-    console.log("handleClearAllTodos: setting todo history");
+    // console.log("handleClearAllTodos: setting todo history");
     setTodoHistory([...todoHistory, todos]);
     setTodos([]);
   }
@@ -77,12 +76,12 @@ function App() {
   //https://charles-stover.medium.com/manage-your-customers-clipboard-with-react-hooks-18486220d0d1
   //https://www.npmjs.com/package/react-use-clipboard
   function handlePaste() {
-    console.log("pasted to the input");
+    // console.log("pasted to the input");
     //the following does not work with the current version of firefox and safari (I think it's because they need permission to read clipboard) BUT works with Chrome (after it asked for permission and I gave it).
     navigator.clipboard.readText().then(
       clipText => {
         addPastedList(clipText);
-        console.log("handlePaste: setting todo history");
+        // console.log("handlePaste: setting todo history");
         setTodoHistory([...todoHistory, todos]);
       });
   }
@@ -90,16 +89,16 @@ function App() {
   function addPastedList(clipText) {
     nameRef.current.value = null;
     if (clipText.trim() === "") {
-      console.log("There was nothing to paste");
+      // console.log("There was nothing to paste");
       return;
     }
     //.trim() the string first to remove the last \n which would otherwise produce an empty string (remove .trim and you'll see)
     let newTodos;
     if (clipText.trim().includes("\n")) {
-      console.log("is separated by new line");
+      // console.log("is separated by new line");
       newTodos = clipText.trim().split("\n");
     } else { //it's separated by new lines
-      console.log("this one is separated by commas")
+      // console.log("this one is separated by commas")
       newTodos = clipText.trim().split(",");
     }
     
@@ -114,14 +113,14 @@ function App() {
     const remainingArray = todos.filter(todo => !todo.complete).map(function(todo) {return todo.name});
     const remainingStr = remainingArray.join("\n");
     navigator.clipboard.writeText(remainingStr).then(function() {
-      console.log("successfully copied");
+      // console.log("successfully copied");
     }, function() {
-      console.log("could not copy");
+      // console.log("could not copy");
     });
   }
 
   function selectOnlyThis(todoID = "none") {
-    console.log("selectOnlyThis");
+    // console.log("selectOnlyThis");
     const newTodos = [...todos]; //makes a copy of todos
     for (let i = 0; i < newTodos.length; i++) {
       if (newTodos[i].id === todoID) {
@@ -135,13 +134,13 @@ function App() {
 
   function updateTodo(newName, todo) {
 
-    console.log("updatedTodo: b4, the history length was: " + todoHistory.length);
+    // console.log("updatedTodo: b4, the history length was: " + todoHistory.length);
     if (todoHistory.length > 0) {
       setTodoHistory([...todoHistory, todos]);
     } else {
       setTodoHistory([todos]);
     }
-    console.log("updatedTodo: now, the history length is: " + todoHistory.length);
+    // console.log("updatedTodo: now, the history length is: " + todoHistory.length);
 
     const updatedName = newName.trim();
     if (updatedName !== todo.name) {
@@ -154,10 +153,10 @@ function App() {
       const firstHalf = todos.slice(0, i);
       const middle = [{ id: uuidv4(), name: updatedName, complete: isComplete, selected: isSelected }];
       const secondHalf = todos.slice(i+1);
-      console.log("first, middle and second half");
-      console.log(firstHalf);
-      console.log(middle);
-      console.log(secondHalf);
+      // console.log("first, middle and second half");
+      // console.log(firstHalf);
+      // console.log(middle);
+      // console.log(secondHalf);
       const newTodos = [...firstHalf, ...middle, ...secondHalf];
       setTodos(newTodos);
     }
@@ -174,7 +173,15 @@ function App() {
           <Grid item xs={1} sm={2} />
           <Grid item xs={10} sm={8}>
             <div style={{display: "flex", marginTop: "5vh", marginBottom: "5vh"}}>
-              <input style={{width: "65%", fontSize: "22px"}} ref={nameRef} type="text" onPaste={handlePaste} />
+              <input 
+                style={{width: "65%", fontSize: "22px"}} 
+                ref={nameRef} type="text" 
+                onPaste={handlePaste}  
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === 'Escape') {
+                    handleAddTodo();
+                }}}
+                />
               <Button  style={{width: "35%"}} variant="contained" color="secondary"  startIcon={<AddIcon />} onClick={handleAddTodo}>Add</Button>
             </div>
             
