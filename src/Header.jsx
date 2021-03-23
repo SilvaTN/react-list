@@ -6,19 +6,9 @@ import UndoIcon from '@material-ui/icons/Undo';
 
 
 
-const Header = ({todoHistory, setTodoHistory, setTodos, selectOnlyThis}) => {
+const Header = ({todoHistory, setTodoHistory, setTodos, selectOnlyThis, handleUndo, handleShowDblTapMsg}) => {
 
-    function handleUndo() {
-        selectOnlyThis();
-        //todoHistory is an array of all todos excluding the current.
-        if (todoHistory.length >= 1) {
-            // console.log("handleUndo: setting todo history");
-            setTodoHistory(todoHistory.slice(0, todoHistory.length - 1));
-            setTodos(todoHistory[todoHistory.length - 1]);
 
-        }
-        
-    }
 
     return (
         // static makes app bar  always be at the top, and prevents other content from being hidden underneath it.
@@ -27,12 +17,12 @@ const Header = ({todoHistory, setTodoHistory, setTodos, selectOnlyThis}) => {
             <Toolbar>
                 <Typography style={{flex: "1"}} variant="h4" >Groceries</Typography>
                 {todoHistory.length > 0 ? (
-                    <IconButton onDoubleClick={handleUndo} aria-label="undo">
+                    <IconButton onClick={handleShowDblTapMsg} onDoubleClick={handleUndo} aria-label="undo">
                         <UndoIcon />
                         <Typography variant="body1">Undo</Typography>
                     </IconButton>
                 ) : (
-                    <IconButton style={{opacity: "0.6"}} onDoubleClick={handleUndo} aria-label="undo">
+                    <IconButton style={{opacity: "0.55"}} aria-label="undo">
                         <UndoIcon />
                         <Typography variant="body1">Undo</Typography>
                     </IconButton>

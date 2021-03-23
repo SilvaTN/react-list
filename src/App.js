@@ -1,9 +1,3 @@
-// Allow double tap to change item name, if you wanna edit the quantities for example. You click out of the item to save. If you leave the item blank, it is deleted when you click out of it.
-
-//pra botar background image com opacity and full size, look at your survey form project
-
-
-
 import React, { useState, useRef, useEffect } from 'react'
 import './App.css'
 import TodoList from './TodoList'
@@ -12,12 +6,21 @@ import { Button, Typography, Paper, Grid} from "@material-ui/core";
 import Header from "./Header";
 import AddIcon from '@material-ui/icons/Add';
 import ClearButtons from "./ClearButtons";
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+import TouchAppIcon from '@material-ui/icons/TouchApp';
 
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const LOCAL_STORAGE_KEY = 'todoApp.todos';
 
 function App() {
-
+  const [snackIsOpen, setSnackIsOpen] = useState(false);
+  const [copySnackIsOpen, setCopySnackIsOpen] = useState(false);
+  let snackTimeout;
   const [todos, setTodos] = useState([]);
   const [todoHistory, setTodoHistory] = useState([]);
   const nameRef = useRef(); //will give us access to input element
@@ -34,6 +37,31 @@ function App() {
   useEffect(() => {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(todos))
   }, [todos])
+
+  function handleShowDblTapMsg() {
+    if (snackTimeout) {
+      console.log("already a snack pending");
+      return;
+    } 
+    console.log("no snack pending");
+    setCopySnackIsOpen(false);
+    snackTimeout = setTimeout(setSnackIsOpen, 800, true);
+    console.log("setTimeout(setSnackIsOpen, 1000)");
+  }
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackIsOpen(false);
+  };
+
+  const handleCloseCopyMsg = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setCopySnackIsOpen(false);
+  };
 
   function toggleTodo(id) {
     const newTodos = [...todos]; //makes a copy of todos
@@ -58,6 +86,9 @@ function App() {
   }
 
   function handleClearDoneTodos() {
+    clearTimeout(snackTimeout);
+    console.log("clearTimeout(snackTimeout)");
+    setSnackIsOpen(false); //in case there is one already open
     // console.log("handleClearDoneTodos: setting todo history");
     setTodoHistory([...todoHistory, todos]);
     const newTodos = todos.filter(todo => !todo.complete);
@@ -67,6 +98,9 @@ function App() {
   }
 
   function handleClearAllTodos() {
+    clearTimeout(snackTimeout);
+    console.log("clearTimeout(snackTimeout)");
+    setSnackIsOpen(false); //in case there is one already open
     // console.log("handleClearAllTodos: setting todo history");
     setTodoHistory([...todoHistory, todos]);
     setTodos([]);
@@ -113,6 +147,8 @@ function App() {
     const remainingArray = todos.filter(todo => !todo.complete).map(function(todo) {return todo.name});
     const remainingStr = remainingArray.join("\n");
     navigator.clipboard.writeText(remainingStr).then(function() {
+      setSnackIsOpen(false);
+      setCopySnackIsOpen(true);
       // console.log("successfully copied");
     }, function() {
       // console.log("could not copy");
@@ -160,16 +196,29 @@ function App() {
       const newTodos = [...firstHalf, ...middle, ...secondHalf];
       setTodos(newTodos);
     }
-}
+  }
+
+  function handleUndo() {
+    clearTimeout(snackTimeout);
+    console.log("clearTimeout(snackTimeout)");
+    setSnackIsOpen(false); //in case there is one already open
+    selectOnlyThis();
+    //todoHistory is an array of all todos excluding the current.
+    if (todoHistory.length >= 1) {
+        // console.log("handleUndo: setting todo history");
+        setTodoHistory(todoHistory.slice(0, todoHistory.length - 1));
+        setTodos(todoHistory[todoHistory.length - 1]);
+    }
+  }
 
 
   return (
     <Paper className="bg" style={{backgroundColor: "rgba(66, 66, 66, 0.9)"}}>
       <Grid container direction="column" >
         <Grid item>
-          <Header todoHistory={todoHistory} setTodoHistory={setTodoHistory} setTodos={setTodos} selectOnlyThis={selectOnlyThis} />
+          <Header todoHistory={todoHistory} setTodoHistory={setTodoHistory} setTodos={setTodos} selectOnlyThis={selectOnlyThis} handleUndo={handleUndo} handleShowDblTapMsg={handleShowDblTapMsg} />
         </Grid>
-        <Grid item container style={{marginBottom: "50px"}}>
+        <Grid item container style={{marginBottom: "80px"}}>
           <Grid item xs={1} sm={2} />
           <Grid item xs={10} sm={8}>
             <div style={{display: "flex", marginTop: "5vh", marginBottom: "5vh"}}>
@@ -190,7 +239,7 @@ function App() {
             <Button style={{backgroundColor: "#696969"}} variant="outlined" onClick={handleCopyList}>Copy Remaining</Button>
 
   {/* in the options, you can clear all and clear complete items */}
-            <ClearButtons handleClearAllTodos={handleClearAllTodos} handleClearDoneTodos={handleClearDoneTodos} />
+            <ClearButtons handleShowDblTapMsg={handleShowDblTapMsg} handleClearAllTodos={handleClearAllTodos} handleClearDoneTodos={handleClearDoneTodos} />
                 
           </Grid>
           <Grid item xs={1} sm={2} />
@@ -204,6 +253,23 @@ function App() {
           <Grid item xs={false} sm={2} />  */}
         </Grid>
       </Grid>
+      <Snackbar open={snackIsOpen} autoHideDuration={3000} onClose={handleClose}>
+        <Alert  
+          onClose={handleClose} 
+          icon={<span>
+            <TouchAppIcon style={{fontSize: "20px"}} />
+            <TouchAppIcon style={{fontSize: "20px"}} />
+          </span>}
+          severity="info"
+        >
+          <Typography style={{fontSize: "20px"}}> Must double tap button. </Typography>
+        </Alert>
+      </Snackbar>
+      <Snackbar open={copySnackIsOpen} autoHideDuration={3000} onClose={handleCloseCopyMsg}>
+        <Alert onClose={handleCloseCopyMsg} severity="success">
+          <Typography> Copied list to clipboard </Typography>
+        </Alert>
+      </Snackbar>
     </Paper>
     );
     

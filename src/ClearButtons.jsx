@@ -6,8 +6,20 @@ import { Button, Grid} from "@material-ui/core";
 function ClearButtons({handleClearDoneTodos, handleClearAllTodos, handleShowDblTapMsg}) {
     return (
         <Grid item container style={{marginTop: "2vh"}} >
-            <Button style={{backgroundColor: "#696969"}} variant="outlined" startIcon={<DeleteOutlineIcon />} onDoubleClick={handleClearDoneTodos} onClick={handleShowDblTapMsg}>Clear Ticked</Button>
-            <Button style={{backgroundColor: "#696969"}} variant="outlined" startIcon={<DeleteIcon />} onDoubleClick={handleClearAllTodos} onClick={handleShowDblTapMsg}>Clear All</Button>
+            <Button style={{backgroundColor: "#696969"}} 
+                variant="outlined" 
+                startIcon={<DeleteOutlineIcon />} 
+                onDoubleClick={handleClearDoneTodos} 
+                onClick={handleShowDblTapMsg}>
+                Clear Ticked
+            </Button>
+            <Button style={{backgroundColor: "#696969"}} 
+                variant="outlined" 
+                startIcon={<DeleteIcon />} 
+                onDoubleClick={handleClearAllTodos} 
+                onClick={handleShowDblTapMsg}>
+                Clear All
+            </Button>
         </Grid>
     );
 

@@ -5,11 +5,12 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import darkTheme from "./theme";
 
 ReactDOM.render(
-  <React.StrictMode>
+  //strict mode causes warning with material ui snackbar
+  // <React.StrictMode>
     <ThemeProvider theme={darkTheme}>
       <App />
-    </ThemeProvider>
+    </ThemeProvider>,
     
-  </React.StrictMode>,
+  // </React.StrictMode>,
   document.getElementById('root')
 );
