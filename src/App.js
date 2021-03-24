@@ -20,6 +20,7 @@ const LOCAL_STORAGE_KEY = 'todoApp.todos';
 function App() {
   const [snackIsOpen, setSnackIsOpen] = useState(false);
   const [copySnackIsOpen, setCopySnackIsOpen] = useState(false);
+  const [editItemSnackIsOpen, setEditItemSnackIsOpen] = useState(false);
   let snackTimeout;
   const [todos, setTodos] = useState([]);
   const [todoHistory, setTodoHistory] = useState([]);
@@ -39,13 +40,14 @@ function App() {
   }, [todos])
 
   function handleShowDblTapMsg() {
-    if (snackTimeout) {
+    if (snackTimeout || snackIsOpen || copySnackIsOpen || editItemSnackIsOpen) {
       console.log("already a snack pending");
       return;
     } 
     console.log("no snack pending");
+    setEditItemSnackIsOpen(false);
     setCopySnackIsOpen(false);
-    snackTimeout = setTimeout(setSnackIsOpen, 800, true);
+    snackTimeout = setTimeout(setSnackIsOpen, 600, true);
     console.log("setTimeout(setSnackIsOpen, 1000)");
   }
 
@@ -61,6 +63,13 @@ function App() {
       return;
     }
     setCopySnackIsOpen(false);
+  };
+
+  const handleCloseEditMsg = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setEditItemSnackIsOpen(false);
   };
 
   function toggleTodo(id) {
@@ -82,7 +91,9 @@ function App() {
     setTodos(prevTodos => {
       return [...prevTodos, { id: uuidv4(), name: name, complete: false, selected: false }]
     })
-
+    if (todos.length === 0) {
+      setEditItemSnackIsOpen(true);
+    }
   }
 
   function handleClearDoneTodos() {
@@ -148,6 +159,7 @@ function App() {
     const remainingStr = remainingArray.join("\n");
     navigator.clipboard.writeText(remainingStr).then(function() {
       setSnackIsOpen(false);
+      setEditItemSnackIsOpen(false);
       setCopySnackIsOpen(true);
       // console.log("successfully copied");
     }, function() {
@@ -222,7 +234,8 @@ function App() {
           <Grid item xs={1} sm={2} />
           <Grid item xs={10} sm={8}>
             <div style={{display: "flex", marginTop: "5vh", marginBottom: "5vh"}}>
-              <input 
+              <input
+                placeholder="type or paste..."
                 style={{width: "65%", fontSize: "22px"}} 
                 ref={nameRef} type="text" 
                 onPaste={handlePaste}  
@@ -268,6 +281,18 @@ function App() {
       <Snackbar open={copySnackIsOpen} autoHideDuration={3000} onClose={handleCloseCopyMsg}>
         <Alert onClose={handleCloseCopyMsg} severity="success">
           <Typography> Copied list to clipboard </Typography>
+        </Alert>
+      </Snackbar>
+      <Snackbar open={editItemSnackIsOpen} autoHideDuration={3000} onClose={handleCloseEditMsg}>
+        <Alert 
+          onClose={handleCloseEditMsg} 
+          icon={<span>
+            <TouchAppIcon style={{fontSize: "20px"}} />
+            <TouchAppIcon style={{fontSize: "20px"}} />
+          </span>}
+          severity="info"
+        >
+          <Typography style={{fontSize: "20px"}}> Double tap item to edit. </Typography>
         </Alert>
       </Snackbar>
     </Paper>
