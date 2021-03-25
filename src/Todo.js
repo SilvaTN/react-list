@@ -19,33 +19,39 @@ export default function Todo({ todo, toggleTodo, selectOnlyThis, updateTodo }) {
     function handleTodoClick() {
         toggleTodo(todo.id);
     }
-    
+    const opac = "0.1";
     return (
         <div style={{  
             whiteSpace: "nowrap",
             overflow: "auto",
             width: "100%",
-            fontSize: "20px"}}>
-                <label>
-                    <Checkbox style={{width: "10%", marginBottom: "4px"}} checked={todo.complete} onChange={handleTodoClick} />
-                    <Input
-                        style={{width: "80%", fontSize: "20px"}}
-                        readOnly={!todo.selected}
-                        onDoubleClick={handleDblClick}
-                        type='text'
-                        disableUnderline={!todo.selected}
-                        value={newName.value}
-                        onChange={handleEditText}
-                        onKeyDown={(event) => {
-                            if (event.key === 'Enter' || event.key === 'Escape') {
-                            selectOnlyThis();
-                            updateTodo(newName.value, todo);
-                            event.preventDefault(); //prevents a browser reload/refresh??
-                            event.stopPropagation(); //Prevents the event from bubbling up the DOM, but does not stop the browsers default behaviour.
-                            }
-                        }}
-                    />
-                </label>
+            fontSize: "20px"}}
+            className={todo.complete ? 'faded' : null}
+        >
+            <label>
+                <Checkbox 
+                    style={{width: "10%", marginBottom: "4px"}} checked={todo.complete} 
+                    onChange={handleTodoClick} 
+                    color="default"
+                />
+                <Input
+                    style={{width: "80%", fontSize: "20px"}}
+                    readOnly={!todo.selected}
+                    onDoubleClick={handleDblClick}
+                    type='text'
+                    disableUnderline={!todo.selected}
+                    value={newName.value}
+                    onChange={handleEditText}
+                    onKeyDown={(event) => {
+                        if (event.key === 'Enter' || event.key === 'Escape') {
+                        selectOnlyThis();
+                        updateTodo(newName.value, todo);
+                        event.preventDefault(); //prevents a browser reload/refresh??
+                        event.stopPropagation(); //Prevents the event from bubbling up the DOM, but does not stop the browsers default behaviour.
+                        }
+                    }}
+                />
+            </label>
             
         </div>
     )
