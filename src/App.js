@@ -249,7 +249,7 @@ function App() {
             
             <TodoList todos={todos} toggleTodo={toggleTodo} selectOnlyThis={selectOnlyThis}  updateTodo={updateTodo} />
             <div style={{marginBottom: "1vh", marginTop: "2vh"}}><Typography>{todos.filter(todo => !todo.complete).length} remaining</Typography></div>   
-            <Button style={{backgroundColor: "#696969"}} variant="outlined" onClick={handleCopyList}>Copy Remaining</Button>
+            <Button style={{backgroundColor: "#696969", fontSize: "12.5px"}} variant="outlined" onClick={handleCopyList}>Copy Remaining</Button>
 
   {/* in the options, you can clear all and clear complete items */}
             <ClearButtons handleShowDblTapMsg={handleShowDblTapMsg} handleClearAllTodos={handleClearAllTodos} handleClearDoneTodos={handleClearDoneTodos} />
@@ -270,12 +270,12 @@ function App() {
         <Alert  
           onClose={handleClose} 
           icon={<span>
-            <TouchAppIcon style={{fontSize: "20px"}} />
-            <TouchAppIcon style={{fontSize: "20px"}} />
+            <TouchAppIcon style={{fontSize: "17px"}} />
+            <TouchAppIcon style={{fontSize: "17px"}} />
           </span>}
           severity="info"
         >
-          <Typography style={{fontSize: "20px"}}> Must double tap button. </Typography>
+          <Typography style={{fontSize: "17px"}}> Must double tap button. </Typography>
         </Alert>
       </Snackbar>
       <Snackbar open={copySnackIsOpen} autoHideDuration={3000} onClose={handleCloseCopyMsg}>
@@ -287,12 +287,12 @@ function App() {
         <Alert 
           onClose={handleCloseEditMsg} 
           icon={<span>
-            <TouchAppIcon style={{fontSize: "20px"}} />
-            <TouchAppIcon style={{fontSize: "20px"}} />
+            <TouchAppIcon style={{fontSize: "17px"}} />
+            <TouchAppIcon style={{fontSize: "17px"}} />
           </span>}
           severity="info"
         >
-          <Typography style={{fontSize: "20px"}}> Double tap item to edit. </Typography>
+          <Typography style={{fontSize: "17px"}}> Double tap item to edit. </Typography>
         </Alert>
       </Snackbar>
     </Paper>

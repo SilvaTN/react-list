@@ -6,14 +6,14 @@ import { Button, Grid} from "@material-ui/core";
 function ClearButtons({handleClearDoneTodos, handleClearAllTodos, handleShowDblTapMsg}) {
     return (
         <Grid item container style={{marginTop: "2vh"}} >
-            <Button style={{backgroundColor: "#696969"}} 
+            <Button style={{backgroundColor: "#696969", fontSize: "12.5px"}} 
                 variant="outlined" 
                 startIcon={<DeleteOutlineIcon />} 
                 onDoubleClick={handleClearDoneTodos} 
                 onClick={handleShowDblTapMsg}>
                 Clear Ticked
             </Button>
-            <Button style={{backgroundColor: "#696969"}} 
+            <Button style={{backgroundColor: "#696969", fontSize: "12.5px"}} 
                 variant="outlined" 
                 startIcon={<DeleteIcon />} 
                 onDoubleClick={handleClearAllTodos} 
