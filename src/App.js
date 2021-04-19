@@ -257,13 +257,6 @@ function App() {
           </Grid>
           <Grid item xs={1} sm={2} />
 
-        
-        {/* xs={false} is the same as xs={0}, and it means on xtra small screens and up, we take up 0 of the 12 spaces. sm={2} means on small screens and up, we take up 2 of the 12 spaces */}
-          {/* <Grid item xs={false} sm={2} />
-          <Grid item xs={12} sm={8}>
-            <Content />
-          </Grid>
-          <Grid item xs={false} sm={2} />  */}
         </Grid>
       </Grid>
       <Snackbar open={snackIsOpen} autoHideDuration={3000} onClose={handleClose}>

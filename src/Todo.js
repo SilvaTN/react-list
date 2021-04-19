@@ -19,7 +19,7 @@ export default function Todo({ todo, toggleTodo, selectOnlyThis, updateTodo }) {
     function handleTodoClick() {
         toggleTodo(todo.id);
     }
-    const opac = "0.1";
+
     return (
         <div style={{  
             whiteSpace: "nowrap",
